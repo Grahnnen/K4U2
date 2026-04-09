@@ -2,7 +2,7 @@
 
 Lösningen består av två separata Web API-projekt:
 
-Service A – Content API
+Service A – Content API \n
 Service B – LLM Proxy API
 
 Service A anropar Service B för att generera AI-innehåll.
