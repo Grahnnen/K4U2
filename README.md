@@ -64,8 +64,8 @@ dotnet user-secrets set "OpenAI:Model" "gpt-5.4"
 
 Dessa två värden måste vara identiska:
 
-ServiceB:ApiKey i Service A
-InternalApiKey:Value i Service B
+```ServiceB:ApiKey``` i Service A
+```InternalApiKey:Value``` i Service B
 
 Om de inte matchar kommer Service B att svara med 401 Unauthorized.
 
@@ -78,11 +78,11 @@ Kör sedan generate-endpointen i Service A för att låta Service B anropa OpenA
 Kontrollera att:
 
 båda projekten körs
-ServiceB:ApiKey och InternalApiKey:Value är exakt samma
-ServiceB:BaseUrl pekar på rätt port
+```ServiceB:ApiKey``` och ```InternalApiKey:Value``` är exakt samma
+```ServiceB:BaseUrl``` pekar på rätt port
 
 Kontrollera att:
 
-OpenAI:ApiKey är korrekt satt i Service B
-modellen i OpenAI:Model är korrekt
+```OpenAI:ApiKey``` är korrekt satt i Service B
+modellen i ```OpenAI:Model``` är korrekt
 Service B kan nå OpenAI API
