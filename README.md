@@ -2,22 +2,23 @@
 
 Lösningen består av två separata Web API-projekt:
 
-Service A – Content API \n
+Service A – Content API <br />
 Service B – LLM Proxy API
 
-Service A anropar Service B för att generera AI-innehåll.
+Service A anropar Service B för att generera AI-innehåll.<br />
 Därför måste båda projekten köras samtidigt.
 
 ## Starta projekten lokalt
 
 ### Lösningen består av två separata Web API-projekt:
 
-´´´ Service A / Content API
+```
+ Service A / Content API
 Service B / LLM Proxy API
-´´´
+```
 Båda måste köras samtidigt eftersom Service A anropar Service B för att generera text.
 
-´´´
+```
 Starta båda i Visual Studio
 Öppna solutionen i Visual Studio.
 Högerklicka på solutionen i Solution Explorer.
@@ -26,7 +27,7 @@ Gå till Startup Project.
 Välj Multiple startup projects.
 Sätt både Content API och LLM Proxy API till Start.
 Tryck Start eller F5.
-´´´
+```
 
 Kontrollera sedan att båda API:erna startat utan fel.
 
@@ -42,23 +43,23 @@ OpenAI API-nyckel i Service B
 ### Service A / Content API
 
 Gå till mappen för Content API och kör:
-
+```
 dotnet user-secrets init
 dotnet user-secrets set "ServiceB:BaseUrl" "https://localhost:7002"
 dotnet user-secrets set "ServiceB:ApiKey" "min-interna-nyckel-123"
-
+```
 Porten i ServiceB:BaseUrl måste matcha den port som Service B faktiskt kör på lokalt.
 
 ### Service B / LLM Proxy API
 
 Gå till mappen för LLM Proxy API och kör:
-
+```
 dotnet user-secrets init
 dotnet user-secrets set "InternalApiKey:Value" "min-interna-nyckel-123"
 dotnet user-secrets set "OpenAI:BaseUrl" "https://api.openai.com/"
 dotnet user-secrets set "OpenAI:ApiKey" "DIN_OPENAI_API_NYCKEL"
 dotnet user-secrets set "OpenAI:Model" "gpt-5.4"
-
+```
 ### Viktigt om interna nyckeln
 
 Dessa två värden måste vara identiska:
