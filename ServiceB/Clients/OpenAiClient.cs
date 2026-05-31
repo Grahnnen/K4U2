@@ -24,6 +24,7 @@ namespace LLMProxy.Clients
             var request = new OpenAiGenerateRequest
             {
                 Model = _options.Model,
+                Instructions = _options.DeveloperMessage,
                 Input = prompt
             };
 
