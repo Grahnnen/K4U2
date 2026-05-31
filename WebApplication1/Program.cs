@@ -7,6 +7,7 @@ using ContentAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Scalar.AspNetCore;
+using WebApplication1.Middleware;
 
 namespace WebApplication1
 {
@@ -32,6 +33,8 @@ namespace WebApplication1
                 options.CustomizeProblemDetails = context =>
                 {
                     context.ProblemDetails.Instance = context.HttpContext.Request.Path;
+                    context.ProblemDetails.Extensions["traceId"] =
+                        context.HttpContext.TraceIdentifier;
                 };
             });
 
@@ -55,18 +58,30 @@ namespace WebApplication1
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite("Data Source=aicontent.db"));
 
-            builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                // Add XML-comments
+                var currentDirectory = AppContext.BaseDirectory;
+                var xmlFiles = Directory.GetFiles(currentDirectory, "*.xml");
+
+                foreach (var xmlFile in xmlFiles)
+                {
+                    options.IncludeXmlComments(xmlFile);
+                }
+            });
+
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.MapSwagger("/openapi/{documentName}.json");
                 app.MapScalarApiReference();
             }
 
-            app.UseExceptionHandler();
+            app.UseMiddleware<CustomExceptionMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseRouting();

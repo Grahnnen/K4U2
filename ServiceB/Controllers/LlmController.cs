@@ -1,5 +1,4 @@
 ﻿using LLMProxy.Clients;
-using LLMProxy.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -13,12 +12,10 @@ namespace LlmProxyApi.Controllers;
 public class LlmController : ControllerBase
 {
     private readonly OpenAiClient _openAiClient;
-    private readonly IOptions<OpenAiOptions> _options;
 
-    public LlmController(OpenAiClient openAiClient, IOptions<OpenAiOptions> options)
+    public LlmController(OpenAiClient openAiClient)
     {
         _openAiClient = openAiClient;
-        _options = options;
     }
 
     /// <summary>
@@ -32,9 +29,7 @@ public class LlmController : ControllerBase
     {
         var generatedText = await _openAiClient.GenerateAsync(
             request.Prompt,
-            _options.Value.Model,
             ct);
-
         return Ok(new GenerateTextResponse
         {
             GeneratedText = generatedText

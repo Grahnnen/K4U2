@@ -1,5 +1,6 @@
 using LLMProxy.Authentication;
 using LLMProxy.Clients;
+using LLMProxy.Middleware;
 using LLMProxy.Options;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
@@ -38,6 +39,7 @@ namespace ServiceB
             {
                 var options = sp.GetRequiredService<IOptions<OpenAiOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
             })
             .AddHttpMessageHandler<OpenAiAuthHandler>();
 
@@ -45,7 +47,12 @@ namespace ServiceB
 
             builder.Services.AddHttpClient();
             builder.Services.AddControllers();
+            var openAiApiKey = builder.Configuration["OpenAI:ApiKey"];
 
+            if (string.IsNullOrWhiteSpace(openAiApiKey))
+            {
+                throw new InvalidOperationException("OpenAI API key is missing. Set OpenAI:ApiKey using User Secrets.");
+            }
             builder.Services.AddProblemDetails(options =>
             {
                 options.CustomizeProblemDetails = context =>
@@ -64,7 +71,7 @@ namespace ServiceB
                 app.MapOpenApi();
                 app.MapScalarApiReference();
             }
-            app.UseExceptionHandler();
+            app.UseMiddleware<CustomExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 
